@@ -1,0 +1,37 @@
+# Dependencies
+node_modules/
+backend/vendor/
+
+# Environment Variables
+
+.env.development.local
+.env.test.local
+.env.production.local
+backend/config/*.env
+
+# Build outputs
+.next/
+out/
+build/
+dist/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+backend/backend
+
+# Docker & Database
+pgdata/
+*.tar
+docker-compose.override.yml
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db

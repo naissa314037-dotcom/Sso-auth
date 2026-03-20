@@ -1,0 +1,21 @@
+[Unit]
+Description=CNRC Auth Service
+After=network.target postgresql.service
+Wants=postgresql.service
+
+[Service]
+Type=simple
+User=aissa
+WorkingDirectory=/opt/sso-auth
+ExecStart=/opt/sso-auth/sso-auth
+Restart=always
+RestartSec=5
+EnvironmentFile=/opt/sso-auth/.env
+
+# Security
+NoNewPrivileges=true
+ProtectSystem=strict
+ReadWritePaths=/opt/sso-auth/keys
+
+[Install]
+WantedBy=multi-user.target

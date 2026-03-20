@@ -1,0 +1,16 @@
+# Binaries
+main
+backend
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Keys
+keys/
+
+# Environment
+
+
+# Dependencies
+vendor/
