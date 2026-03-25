@@ -14,8 +14,9 @@ type Permission struct {
 	GroupName   string    `json:"group_name" gorm:"index;not null"`
 	Description string    `json:"description"`
 	Roles       []Role    `json:"-" gorm:"many2many:role_permissions;"`
-	CreatedAt   time.Time `json:"created_at"`
-	UpdatedAt   time.Time `json:"updated_at"`
+	CreatedAt   time.Time      `json:"created_at"`
+	UpdatedAt   time.Time      `json:"updated_at"`
+	DeletedAt   gorm.DeletedAt `json:"-" gorm:"index"`
 }
 
 func (p *Permission) BeforeCreate(tx *gorm.DB) error {

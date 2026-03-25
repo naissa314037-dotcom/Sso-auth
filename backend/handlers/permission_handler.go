@@ -111,6 +111,16 @@ func (h *PermissionHandler) Create(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"data": permission})
 }
 
+// isDefaultPermission checks if the given name is a default system permission
+func isDefaultPermission(name string) bool {
+	for _, dp := range database.DefaultPermissionNames() {
+		if dp == name {
+			return true
+		}
+	}
+	return false
+}
+
 func (h *PermissionHandler) Update(c *fiber.Ctx) error {
 	id := c.Params("id")
 
@@ -121,10 +131,17 @@ func (h *PermissionHandler) Update(c *fiber.Ctx) error {
 		})
 	}
 
+	// Protect default permissions from name change
 	var req UpdatePermissionRequest
 	if err := c.BodyParser(&req); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error": "Invalid request body",
+		})
+	}
+
+	if isDefaultPermission(permission.Name) && req.Name != "" && req.Name != permission.Name {
+		return c.Status(fiber.StatusForbidden).JSON(fiber.Map{
+			"error": "Cannot rename a default system permission",
 		})
 	}
 
@@ -157,6 +174,13 @@ func (h *PermissionHandler) Delete(c *fiber.Ctx) error {
 	if database.DB.First(&permission, "id = ?", id).Error != nil {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 			"error": "Permission not found",
+		})
+	}
+
+	// Protect default permissions from deletion
+	if isDefaultPermission(permission.Name) {
+		return c.Status(fiber.StatusForbidden).JSON(fiber.Map{
+			"error": "Cannot delete a default system permission",
 		})
 	}
 

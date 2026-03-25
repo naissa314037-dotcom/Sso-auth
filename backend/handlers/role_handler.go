@@ -193,6 +193,13 @@ func (h *RoleHandler) Delete(c *fiber.Ctx) error {
 		})
 	}
 
+	// Protect default Admin role
+	if role.Name == "Admin" {
+		return c.Status(fiber.StatusForbidden).JSON(fiber.Map{
+			"error": "Cannot delete the default Admin role",
+		})
+	}
+
 	// Remove associations
 	database.DB.Model(&role).Association("Permissions").Clear()
 	database.DB.Model(&role).Association("Users").Clear()

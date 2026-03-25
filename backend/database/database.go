@@ -3,6 +3,7 @@ package database
 import (
 	"fmt"
 	"log"
+	"time"
 
 	"sso-auth/config"
 	"sso-auth/models"
@@ -27,6 +28,15 @@ func Connect(cfg *config.Config) {
 	if err != nil {
 		log.Fatalf("Failed to connect to database: %v", err)
 	}
+
+	// Connection pooling
+	sqlDB, err := DB.DB()
+	if err != nil {
+		log.Fatalf("Failed to get underlying DB: %v", err)
+	}
+	sqlDB.SetMaxOpenConns(25)
+	sqlDB.SetMaxIdleConns(5)
+	sqlDB.SetConnMaxLifetime(5 * time.Minute)
 
 	log.Println("Database connected successfully")
 }

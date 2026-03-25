@@ -15,8 +15,9 @@ type User struct {
 	Password     string    `json:"-" gorm:"not null"`
 	IsSuperAdmin bool      `json:"is_super_admin" gorm:"default:false"`
 	Roles        []Role    `json:"roles,omitempty" gorm:"many2many:user_roles;"`
-	CreatedAt    time.Time `json:"created_at"`
-	UpdatedAt    time.Time `json:"updated_at"`
+	CreatedAt    time.Time      `json:"created_at"`
+	UpdatedAt    time.Time      `json:"updated_at"`
+	DeletedAt    gorm.DeletedAt `json:"-" gorm:"index"`
 }
 
 func (u *User) BeforeCreate(tx *gorm.DB) error {
